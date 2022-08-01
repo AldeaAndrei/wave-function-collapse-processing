@@ -72,7 +72,7 @@ class Map
     }
   }
 
-  public void pickNext()
+  public boolean pickNext()
   {
     int minOp = 999999;
     ArrayList<Cell> cellsToCollapse = new ArrayList<Cell>();
@@ -132,12 +132,53 @@ class Map
     if (cellsToCollapse.size() < 1)
     {
       //cells[(int)random(mapSize)][(int)random(mapSize)].collapse();
-      return;
+      return false;
     }
 
     int rand = (int)random(cellsToCollapse.size());
-    cellsToCollapse.get(rand).collapse();
+
+    if (!cellsToCollapse.get(rand).collapse())
+    {
+      solveUncollapsed(rand);
+    }
+
     uncollapsed.remove(cellsToCollapseIndex.get(rand));
+
+    if (uncollapsed.size() == 0) return false;
+    return true;
+  }
+
+  public void solveUncollapsed(int index)
+  {
+
+    int uncollapsedi = index/mapSize;
+    int uncollapsedj = index%mapSize;
+    
+    println("i:" + index);
+    println("x: " + uncollapsedi);
+    println("y: " + uncollapsedj);
+
+    int removeSize = 2;
+
+    for (int i = -removeSize; i <= removeSize; i++)
+    {
+      for (int j = -removeSize; j <= removeSize; j++)
+      {
+        if((0 <= uncollapsedi + i && uncollapsedi + i < mapSize) && (0 <= uncollapsedj + j && uncollapsedj + j < mapSize))
+        {
+          int uncollapseIndex = (uncollapsedi + i) * mapSize + (uncollapsedj + j);
+          if(uncollapsed.contains(uncollapseIndex))
+          {
+             cells[uncollapsedi + i][uncollapsedj + j].uncollapse(); 
+          }
+          else
+          {
+            uncollapsed.add(uncollapseIndex);
+            cells[uncollapsedi + i][uncollapsedj + j].uncollapse();
+          }
+        }
+      }
+    }
   }
 
   public void draw()

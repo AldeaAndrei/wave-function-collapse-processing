@@ -1,5 +1,5 @@
-int mapSize = 100;
-int windowSize = 1000;
+int mapSize = 25;
+int windowSize = 500;
 
 public OptionsLookup globalLookup; 
 
@@ -14,11 +14,18 @@ void setup()
 {
   globalLookup = new OptionsLookup();
   map = new Map(mapSize, windowSize);
+
+  //while (map.pickNext())
+  //{
+  //  map.updateCells();
+  //}
 }
 
 void draw()
 {
+
   map.pickNext();
   map.updateCells();
+
   map.draw();
 }

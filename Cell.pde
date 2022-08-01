@@ -7,6 +7,8 @@ class Cell
 
   private boolean collapsed = false;
   private Option option;
+  
+  private boolean uncollapsed = false;
 
   //temp
   private color c = color(random(255), random(255), random(255));
@@ -19,14 +21,28 @@ class Cell
     options = new Options();
   }
 
-  public void collapse()
+  public boolean collapse()
   {
     option = options.getRandomOption();
 
-    if (option == null) return;
+    if (option == null) return false;
 
     collapsed = true;
     option.image.resize(size, size);
+    
+    uncollapsed = false;
+    
+    return true;
+  }
+  
+  public void uncollapse()
+  {
+    uncollapsed = true;
+    
+     collapsed = false;
+     option = null;
+     
+     options = new Options();
   }
 
   public void draw()
@@ -35,7 +51,13 @@ class Cell
       strokeWeight(1);
       stroke(100);
       fill(30);
+      
+      if(uncollapsed) fill(200, 50, 50);
+      
       rect(position.x, position.y, size, size);
+      
+      
+      
       //fill(255);
       //text(options.size(), position.x + size/2, position.y + size/2);
     } else {
